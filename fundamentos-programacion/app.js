@@ -8,28 +8,38 @@ console.log(`Nombre: ${nombre}`);
 console.log(`Edad: ${edad}`);
 console.log(`¿Tiene permiso? ${tienePermiso}`);
 console.log(`El valor de PI es: ${PI}`);
-console.log(`Tipo de dato de 'edad': ${typeof edad}`);
+console.log(`Tipo de dato de edad: ${typeof edad}`);
 
 console.log("\n--- 2.1 Condicionales ---");
-const calificacion = 90;
+const calificacion = 80;
 
-if (calificacion >= 70) {
-    console.log("¡Aprobado!");
+if (calificacion >= 90) {
+    console.log("Excelente");
+} else if (calificacion >= 70 && calificacion < 90) {
+    console.log("Bien hecho");
+} else if (calificacion >= 50 && calificacion < 70) {
+    console.log("Mal hecho")
 } else {
-    console.log("Reprobado");
+    console.log("Horrible")
 }
 
 console.log("\n--- 2.2 Bucles ---");
-console.log("Bucle for:");
+console.log("Bucle 1 for:");
 const frutas = ["sandia", "pera", "piña"];
 for (let i = 0; i < frutas.length; i++) {
-    console.log(`Me gusta la ${frutas[i]}`);
+    console.log(`Me gusta la ${frutas[i]} por la mañana.`);
 }
 
-console.log("Bucle white:");
+console.log ("\n Bucle 2 for:");
+const comida = ["arroz blanco", "locrio de salami", "moro de habichuelas negras"];
+for (let i = 0; i < comida.length; i++){
+    console.log (`Me gusta el ${comida[i]}.`);
+}
+
+console.log("\n Bucle de números:");
 let contador = 1;
-while (contador < 6) {
-    console.log(`El contador es: ${contador}`);
+while (contador <= 5) {
+    console.log(`Yo compré ${contador} de menta hoy.`);
     contador++;
 }
 
@@ -43,5 +53,5 @@ function sumar(a,b) {
 }
 
 saludar("María");
-const resultadoSuma = sumar(6, 8);
-console.log(`La suma de 6 y 8 es: ${resultadoSuma}`);
+const resultadoSuma = sumar(9, 9);
+console.log(`La semana pasada cumpliste ${resultadoSuma} años, ¿cierto?`);
