@@ -1,0 +1,121 @@
+Muy buena pregunta 👌. Te explico uno por uno, de manera clara y práctica:
+
+🔹 Comandos básicos de Git
+
+git init
+Inicializa un repositorio Git en la carpeta actual.
+
+Crea la carpeta oculta .git que guarda el historial y configuración.
+
+Ejemplo:
+
+git init
+
+
+git status
+Muestra el estado actual del repositorio:
+
+Qué archivos están modificados.
+
+Qué archivos están listos (staged) para ser confirmados.
+
+Ejemplo:
+
+git status
+
+
+git add nombre_del_archivo.js
+Añade un archivo específico al staging area (zona de preparación) para el próximo commit.
+
+Ejemplo:
+
+git add app.js
+
+
+git add .
+Añade todos los cambios (nuevos, modificados o eliminados) al staging area.
+
+Ejemplo:
+
+git add .
+
+
+git commit -m "Mensaje descriptivo del cambio"
+Guarda los cambios añadidos con un mensaje que describa qué hiciste.
+
+Ejemplo:
+
+git commit -m "Agregué la función de login"
+
+
+git log
+Muestra el historial de commits: autores, fechas y mensajes.
+
+Ejemplo:
+
+git log
+
+🔹 Trabajo con repositorios remotos (GitHub, GitLab, etc.)
+
+git remote add origin URL_DEL_REPOSITORIO_REMOTO
+Conecta tu repositorio local con un repositorio remoto.
+
+Solo se hace una vez por proyecto.
+
+Ejemplo:
+
+git remote add origin https://github.com/usuario/proyecto.git
+
+
+git push -u origin master
+Envía tus commits locales al repositorio remoto.
+
+origin → el nombre del remoto (por defecto).
+
+master → la rama a la que empujas.
+
+Ejemplo:
+
+git push -u origin master
+
+
+git pull origin master
+Descarga y fusiona los últimos cambios del repositorio remoto en tu rama actual.
+
+Ejemplo:
+
+git pull origin master
+
+
+git clone URL_DEL_REPOSITORIO_REMOTO
+Descarga un repositorio remoto completo a tu computadora.
+
+Ejemplo:
+
+git clone https://github.com/usuario/proyecto.git
+
+🔹 Trabajo con ramas (branches)
+
+git branch nombre-de-la-rama
+Crea una nueva rama (línea paralela de desarrollo).
+
+Ejemplo:
+
+git branch nueva-funcionalidad
+
+
+git checkout nombre-de-la-rama
+Cambia de una rama a otra.
+
+Ejemplo:
+
+git checkout nueva-funcionalidad
+
+
+📌 En resumen:
+
+init, add, commit → trabajar localmente.
+
+remote, push, pull, clone → trabajar con repositorios remotos.
+
+branch, checkout → trabajar con ramas para separar versiones de desarrollo.
