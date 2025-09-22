@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Jotas</title>
+</head>
+<style>
+    body {
+        background-color: #914b91;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .calculator {
+        border-radius: 25px;
+        box-shadow: none;
+        background-color: #221f22;
+        width: 400px;
+        padding: 25px;
+    }
+
+    .display {
+        background-color: #8a7f8a;
+        color: #ffffff;
+        font-size: 4rem;
+        text-align: right;
+        padding: 5px;
+        border-radius: 25px;
+        margin-bottom: 25px;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap:10px;
+    }
+
+    .button {
+        background-color: #8178817c;
+        color: #ffffff;
+        font-size: 1.8rem;
+        padding: 20px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.2s, transform 01s;
+    }
+
+    .button:active {
+        transform: scale(0.95);
+    }
+
+    .button.operator {
+        background-color: #0011ff;
+        color: #000;
+    }
+
+    .button.operator:active {
+        background-color: #ff0000;
+    }
+
+    .button.equals {
+        background-color: #f4f763;
+        color: #000;
+    }
+
+    .button.equals:active {
+        background-color: #3cffe5;
+    }
+
+    .button.clear {
+        background-color:#cf4a4a;
+        color: #000;
+    }
+
+    .button.clear:active {
+        background-color: #b1b1b1;
+    }
+
+    .button.sign {
+        background-color: #cf9a4a;
+        color: #000;
+    }
+
+    .button.sign:active {
+        background-color: #cf9a4a;
+    }
+
+    @media (max-width: 400px) {
+        .calculator {
+            width: 90vw;
+            padding: 15px;
+        }
+
+        .display {
+            font-size: 3rem;
+        }
+
+        .button {
+            font-size: 1.5rem;
+            padding: 15px;
+        }
+    }
+</style>
+
+    <script type="module">
+        const display = document.querySelector('.display')
+        const buttons = document.querySelector('.buttons')
+
+        const INITIAL_STATE = {
+            displayValue: '0',
+            firstOperand: null,
+            waitingForSecondOperand: false,
+            operator: null
+        }
+
+        let calculatorState = { ...INITIAL_STATE }
+
+        const performCalculation = (state) => {
+            const { firstOperand, displayValue, operator } = state
+            const valor1 = parseFloat(firstOperand)
+            const valor2 = parseFloat(displayValue)
+
+            if (Number.isNaN(valor1) || Number.isNaN(valor2)) {
+                return state
+            }
+
+            const result = {
+                '+': (a, b) => a + b,
+                '-': (a, b) => a - b,
+                '*': (a, b) => a * b,
+                '/': (a, b) => a / b
+            }[operator](valor1, valor2)
+
+            return {
+                ...state,
+                displayValue: String(result),
+                firstOperand: result,
+                waitingForSecondOperand: true,
+                operator: null
+            }
+        }
+
+        const handleNumber = (state, number) => {
+            const { displayValue, waitingForSecondOperand } = state
+            
+            if (waitingForSecondOperand) {
+                return {
+                    ...state,
+                    displayValue: number,
+                    waitingForSecondOperand: false
+                }
+            }
+            
+            return {
+                ...state,
+                displayValue: displayValue === '0' ? number : displayValue + number
+            }
+        }
+
+        const handleOperator = (state, nextOperator) => {
+            const { firstOperand, displayValue, operator } = state
+            const inputValue = parseFloat(displayValue)
+            
+            if (operator && state.waitingForSecondOperand) {
+                return {
+                    ...state,
+                    operator: nextOperator
+                }
+            }
+
+            if (firstOperand === null && !Number.isNaN(inputValue)) {
+                return {
+                    ...state,
+                    firstOperand: inputValue,
+                    waitingForSecondOperand: true,
+                    operator: nextOperator
+                }
+            }
+
+            return performCalculation({
+                ...state,
+                operator: nextOperator
+            })
+        }
+
+        const handleDecimal = (state) => {
+            if (state.waitingForSecondOperand) {
+                return {
+                    ...state,
+                    displayValue: '0.',
+                    waitingForSecondOperand: false
+                }
+            }
+
+            if (!state.displayValue.includes('.')) {
+                return {
+                    ...state,
+                    displayValue: `${state.displayValue}.`
+                }
+            }
+
+            return state
+        }
+        
+        const handleClear = () => {
+            return { ...INITIAL_STATE }
+        }
+        
+        const handleClearEntry = (state) => {
+            return { ...INITIAL_STATE };
+        }
+
+        const handleSign = (state) => {
+            const { displayValue } = state;
+            const value = parseFloat(displayValue);
+            if (Number.isNaN(value)) {
+                return state;
+            }
+            const result = value * -1;
+            return {
+                ...state,
+                displayValue: String(result)
+            };
+        };
+
+        const handleInput = (event) => {
+            const { target } = event
+            if (!target.matches('.button')) {
+                return
+            }
+            const type = target.dataset.type
+            const value = target.dataset.value
+            
+            const handlers = {
+                'number': (state) => handleNumber(state, value),
+                'operator': (state) => handleOperator(state, value),
+                'decimal': (state) => handleDecimal(state),
+                'equals': (state) => performCalculation(state),
+                'clear': () => handleClear(),
+                'clearE': (state) => handleClearEntry(state),
+                'sign': (state) => handleSign(state)
+                }
+        
+            const nextState = handlers[type]
+            ? handlers[type](calculatorState)
+            : calculatorState
+            
+            calculatorState = nextState
+            display.textContent = calculatorState.displayValue
+        }
+        
+        buttons.addEventListener('click', handleInput)
+    </script>
+
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">0</div>
+        <div class="buttons">
+            <div class="button clear" data-type="clear">C</div>
+            <div class="button clear" data-type="clearE">CE</div>
+            <div class="button operator" data-type="operator" data-value="/">/</div>
+            <div class="button operator" data-type="operator" data-value="*">*</div>
+            <div class="button" data-type="number" data-value="7">7</div>
+            <div class="button" data-type="number" data-value="8">8</div>
+            <div class="button" data-type="number" data-value="9">9</div>
+            <div class="button operator" data-type="operator" data-value="-">-</div>
+            <div class="button" data-type="number" data-value="4">4</div>
+            <div class="button" data-type="number" data-value="5">5</div>
+            <div class="button" data-type="number" data-value="6">6</div>
+            <div class="button operator" data-type="operator" data-value="+">+</div>
+            <div class="button" data-type="number" data-value="1">1</div>
+            <div class="button" data-type="number" data-value="2">2</div>
+            <div class="button" data-type="number" data-value="3">3</div>
+            <div class="button equals" data-type="equals">=</div>
+            <div class="button sign" data-type="sign">+/-</div>
+            <div class="button" data-type="number" data-value="0">0</div>
+            <div class="button" data-type="decimal" data-value=".">.</div>
+            <div></div>
+        </div>
+    </div>
+</body>
+</html>
